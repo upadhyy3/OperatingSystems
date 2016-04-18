@@ -1,0 +1,171 @@
+#include  <stdio.h>
+#include  <string.h>
+#include  <sys/types.h>
+#include  <stdlib.h>
+#include  <sys/wait.h>
+#include "userapp.h"
+
+/*
+ * Func: register_process
+ * Desc: Registering the process with kernel module
+ *
+ */
+/*
+void register_process(int pid) 
+{
+        char command[100];
+	//Write to /proc/mp1/status 
+	printf("\nInside register_procees function\n");
+	int ret = 0;
+	//ret = system("temp");
+        sprintf(command, "echo %d > //proc/mp1/status1", pid);
+	printf("The process should be registered in /proc/mp1/status. Check now! \n");
+	system("echo '%d'>//proc/mp1/status1", pid);
+        int retrn = system(command);
+	printf("ret1 is %d and ret2 is %d\n", ret,retrn);
+}
+*/
+
+
+void register_process(int pid)
+{
+	FILE *fp;
+	printf("\n\nInside reg function\n");
+	fp = fopen("/proc/mp1piy/status1","w");
+	
+	if(fp == NULL)
+	{
+		printf("unable to open the file\n");
+		return;
+	}
+	long pidLong = (long) pid;
+	char command[100];
+	sprintf(command, "echo %d > /proc/mp1piy/status1", pid);
+	printf("\nCOmmand is\n %s", command);
+	printf("\n");
+	//write(fp, &pidLong, 4);
+	system(command);
+	//char ret ='a';
+	//fprintf(fp, "%c", ret);
+	fclose(fp);
+}
+
+/*
+ * Func: read_proc
+ * Desc: Reading back from the kernel module
+ *
+ */
+
+void read_proc()
+{
+	/* read from /proc/mp1/status */
+	char command[] = "cat /proc/mp1/status";
+	printf("Printing return value of read from /proc/mp1/status\n");
+	printf("PID:CPU Time\n");
+	system(command);
+}
+
+/*
+ * Func: calculate_factorial
+ * Desc: Calcuate factorial of a given number n in order to prolong the process execution
+ *
+ */
+
+int calculate_factorial(int n) 
+{
+	int prod=1, i=1; 
+	if (n<0) 
+		return -1; 
+	if (n==0)
+		return 1; 
+	for (i=2; i<=n; i++)
+		prod=prod*i; 
+	return prod; 
+}
+
+/*
+ * Func: find_factorial_factorial_times
+ * Desc: Find factorial of a number for factorial times in order to prolong the process execution
+ *
+ */
+
+void find_factorial_factorial_times(int n, int fact)
+{
+	int i=0; 
+
+	for (i=0; i<=fact; i++) {
+		calculate_factorial(n); 
+	}
+	printf("Factorial of %d is calculated %d times !\n", n,calculate_factorial(n)); 
+}
+
+/*
+ * Func: find_factorials
+ * Desc: Find factorials of numbers from 1 to n in order to prolong the process execution
+ *
+ */
+
+void find_factorials(int n) 
+{
+	int i;
+
+	for (i=0; i<=n; i++) {
+		printf("\nFactorial of %d is %d\n", i, calculate_factorial(i)); 
+		find_factorial_factorial_times(i, calculate_factorial(i)); 
+	}
+}
+
+/*
+ * Func: main
+ * Desc: main body of the user space application
+ *
+ */
+
+int main(int argc, char* argv[])
+{
+	int pid;
+	int n = 12;
+
+	
+
+	/* Get pid of the process */
+	pid=getpid(); 
+	printf("PID of this process is %d \n", pid); 
+
+	/* Register the process with our module */
+	register_process(pid); 
+
+	/* Calculate factorial */
+//	find_factorials(n); 
+
+	/* Read the entry in /proc/mp1/status */
+//	read_proc();
+
+	return 0;
+/*	int n= 10;
+        int i=0;
+        int status=0;
+	char command[50];
+
+        printf("Creating %d children\n", n);
+        foo("parent");
+        for(i=0;i<n;i++)
+        {
+                pid_t pid=fork();
+
+                if (pid==0) 
+                {	
+		     printf("Process Id: %d",getpid());	
+		     strcpy(command,, getpid());
+		     system("echo 'getpid()'>/proc/mp1/status");
+                     exit(0);
+
+                }
+                wait(&status);  
+        }
+
+   system("cat /proc/$PPID/status"); */     
+	
+}	
+
+
